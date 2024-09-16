@@ -11,7 +11,9 @@ permissions: write-all
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: docker.io/library/archlinux:latest
+    container: 
+      image: docker.io/library/archlinux:latest
+      options: --privileged
 
     steps:
     - name: Cache pacman packages
