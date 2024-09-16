@@ -1,0 +1,43 @@
+name: Build ISO Image
+
+on:
+  push:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: docker.io/library/archlinux:latest
+
+    steps:
+    - name: Cache pacman packages
+      uses: actions/cache@v4
+      with:
+        path: /var/cache/pacman/pkg
+        key: ${{ runner.os }}-pacman-${{ github.sha }}
+        restore-keys: ${{ runner.os }}-pacman-
+
+    - name: Prepare build environment
+      run: |
+        pacman-key --init
+        pacman --noconfirm -Syu
+        git clone --depth 1 https://github.com/LingmoOS/lingmo-iso-builder /lingmo-iso-builder
+
+    - name: Run mkarchiso
+      run: mkarchiso -v /lingmo-iso-builder/profile -o /out
+
+    - name: List contents in ISO
+      run: |
+        du -m /out/*.iso
+        7z l /out/*.iso
+
+    - name: Upload ISO
+      uses: actions/upload-artifact@v4
+      with:
+        name: iso
+        compression-level: 0
+        path: /out/*.iso
