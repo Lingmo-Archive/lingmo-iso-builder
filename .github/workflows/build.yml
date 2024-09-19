@@ -17,7 +17,6 @@ jobs:
     - name: Prepare build environment
       run: |
        sudo apt update
-       sudo apt upgrade
        sudo apt install xorriso
 
     - name: Run builder
