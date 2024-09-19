@@ -17,7 +17,8 @@ jobs:
     - name: Prepare build environment
       run: |
        sudo apt update
-       sudo apt install squashfs-tools
+       sudo apt upgrade
+       sudo apt install xorriso
 
     - name: Run builder
       run: sudo ./build.sh
