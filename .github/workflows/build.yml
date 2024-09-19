@@ -9,35 +9,27 @@ permissions: write-all
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: 
-      image: docker.io/library/archlinux:latest
-      options: --privileged
 
     steps:
-    - name: Cache pacman packages
-      uses: actions/cache@v4
-      with:
-        path: /var/cache/pacman/pkg
-        key: ${{ runner.os }}-pacman-${{ github.sha }}
-        restore-keys: ${{ runner.os }}-pacman-
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Prepare build environment
       run: |
-        pacman-key --init
-        pacman --noconfirm -Syu archiso git grub
-        git clone --depth 1 https://github.com/LingmoOS/lingmo-iso-builder /lingmo-iso-builder
+       sudo apt update
+       sudo apt install grub-efi-amd64-bin
 
-    - name: Run mkarchiso
-      run: mkarchiso -v /lingmo-iso-builder/profile -o /out
+    - name: Run builder
+      run: sudo ./build.sh
 
     - name: List contents in ISO
       run: |
-        du -m /out/*.iso
-        7z l /out/*.iso
+        du -m *.iso
+        7z l *.iso
 
     - name: Upload ISO
       uses: actions/upload-artifact@v4
       with:
         name: iso
         compression-level: 0
-        path: /out/*.iso
+        path: *.iso
