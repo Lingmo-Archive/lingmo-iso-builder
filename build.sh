@@ -3,7 +3,7 @@ set -e
 export LC_ALL="C.UTF-8"
 
 log(){
-    echo "[$(tput setaf 14)INFO$(tput sgr0)] ${@}"
+    echo "[$(printf "\033[96m")INFO$(printf "\033[0m")] ${@}"
 }
 
 if [ $UID -ne 0 ];then
@@ -12,7 +12,7 @@ if [ $UID -ne 0 ];then
 fi
 
 log "Getting apk-tools"
-wget $(curl -L https://gitlab.alpinelinux.org/api/v4/projects/alpine%2Fapk-tools/releases/permalink/latest | jq -r ".assets.links[] | select(.name | contains(\"$(uname -m)\")) | .url")
+curl -LO $(curl -L https://gitlab.alpinelinux.org/api/v4/projects/alpine%2Fapk-tools/releases/permalink/latest | jq -r ".assets.links[] | select(.name | contains(\"$(uname -m)\")) | .url")
 chmod +x apk.static
 
 log "Building rootfs"
