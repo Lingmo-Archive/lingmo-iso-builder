@@ -17,7 +17,7 @@ jobs:
     - name: Prepare build environment
       run: |
        sudo apt update
-       sudo apt install grub-efi-amd64-bin
+       sudo apt install squashfs-tools
 
     - name: Run builder
       run: sudo ./build.sh
