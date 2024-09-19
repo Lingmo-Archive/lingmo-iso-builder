@@ -32,4 +32,4 @@ jobs:
       with:
         name: iso
         compression-level: 0
-        path: *.iso
+        path: ./*.iso
