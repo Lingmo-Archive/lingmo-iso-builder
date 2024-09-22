@@ -25,7 +25,7 @@ chmod +x "${workdir}/apk"
 
 log "Building rootfs"
 extra_packages=(
-    bash linux-lts linux-firmware-none acpi
+    bash linux-lts linux-firmware acpi
 )
 "${workdir}/apk" \
     -X https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/ \
@@ -37,3 +37,8 @@ arch-chroot "${workdir}/rootfs" /chroot.sh
 
 rootfs_size=$(du -sh "${workdir}/rootfs" | awk '{print $1}')
 log "RootFS size: ${rootfs_size}"
+
+log "Making SquashFS image"
+mksquashfs "${workdir}/rootfs" "${workdir}/rootfs.squashfs" -comp xz -Xbcj x86 -b 1M -Xdict-size 1M
+rootfs_size=$(du -h "${workdir}/rootfs.squashfs" | awk '{print $1}')
+log "SquashFS image size: ${rootfs_size}"

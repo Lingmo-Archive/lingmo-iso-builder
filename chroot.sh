@@ -45,3 +45,9 @@ done
 for service in "${shutdown_services[@]}"; do
     rc-update add "$service" shutdown
 done
+
+log "Setting up dracut"
+cat >/etc/dracut.conf.d/live.conf <<EOF
+compress="xz"
+add_dracutmodules+=" dmsquash-live "
+EOF
