@@ -5,6 +5,12 @@ log(){
     echo "$(printf "\033[94m")  ->$(printf "\033[0m")" "${@}"
 }
 
+log "Setting up DNS"
+cat>/etc/resolv.conf<<EOF
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+EOF
+
 log "Installing base packages"
 
 cat>/etc/apk/repositories<<EOF
