@@ -2,7 +2,7 @@
 set -e
 
 log(){
-    echo "$(printf "\033[96m")  ->$(printf "\033[0m")" "${@}"
+    echo "$(printf "\033[94m")  ->$(printf "\033[0m")" "${@}"
 }
 
 log "Installing base packages"
@@ -12,7 +12,6 @@ https://dl-cdn.alpinelinux.org/alpine/latest-stable/main
 https://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF
 
-apk update
 apk add linux-lts linux-firmware-none acpi dracut
 
 log "Setting up services"
