@@ -1,45 +1,47 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e
 
-log(){
+log() {
     echo "$(printf "\033[94m")  ->$(printf "\033[0m")" "${@}"
 }
 
 log "Setting up DNS"
-cat>/etc/resolv.conf<<EOF
+cat >/etc/resolv.conf <<EOF
 nameserver 8.8.8.8
 nameserver 8.8.4.4
 EOF
 
 log "Installing base packages"
 
-cat>/etc/apk/repositories<<EOF
+cat >/etc/apk/repositories <<EOF
 https://dl-cdn.alpinelinux.org/alpine/latest-stable/main
 https://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF
 
-apk add linux-lts linux-firmware-none acpi dracut
+community_packages=(
+    dracut
+)
+apk add "${community_packages[@]}"
 
 log "Setting up services"
 
-rc-update add devfs sysinit
-rc-update add dmesg sysinit
-rc-update add mdev sysinit
-rc-update add hwdrivers sysinit
+sysinit_services=(devfs dmesg mdev hwdrivers)
+boot_services=(hwclock modules sysctl hostname bootmisc syslog networking seedrng swap)
+default_services=(crond acpid)
+shutdown_services=(mount-ro killprocs savecache)
 
-rc-update add hwclock boot
-rc-update add modules boot
-rc-update add sysctl boot
-rc-update add hostname boot
-rc-update add bootmisc boot
-rc-update add syslog boot
-rc-update add networking boot
-rc-update add seedrng boot
-rc-update add swap boot
+for service in "${sysinit_services[@]}"; do
+    rc-update add "$service" sysinit
+done
 
-rc-update add crond default
-rc-update add acpid default
+for service in "${boot_services[@]}"; do
+    rc-update add "$service" boot
+done
 
-rc-update add mount-ro shutdown
-rc-update add killprocs shutdown
-rc-update add savecache shutdown
+for service in "${default_services[@]}"; do
+    rc-update add "$service" default
+done
+
+for service in "${shutdown_services[@]}"; do
+    rc-update add "$service" shutdown
+done
