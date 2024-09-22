@@ -17,7 +17,7 @@ jobs:
     - name: Prepare build environment
       run: |
        sudo apt update
-       sudo apt install xorriso
+       sudo apt install arch-install-scripts
 
     - name: Run builder
       run: sudo ./build.sh
