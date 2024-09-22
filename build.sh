@@ -6,7 +6,7 @@ export LC_ALL="C.UTF-8"
 workdir=$(mktemp -d lingmoiso.XXXXXXXXXX -p /tmp)
 
 log(){
-    echo "[$(printf "\033[96m")INFO$(printf "\033[0m")]" "${@}"
+    echo "$(printf "\033[92m")==>$(printf "\033[0m")" "${@}"
 }
 
 get_apk_download_link(){
@@ -20,7 +20,7 @@ if [ $UID -ne 0 ];then
 fi
 
 log "Getting apk-tools"
-wget -O "${workdir}/apk" "$(get_apk_download_link)"
+curl -Lo "${workdir}/apk" "$(get_apk_download_link)"
 chmod +x "${workdir}/apk"
 
 log "Building rootfs"

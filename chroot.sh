@@ -2,11 +2,16 @@
 set -e
 
 log(){
-    echo "[CHROOT] [$(printf "\033[96m")INFO$(printf "\033[0m")]" "${@}"
+    echo "$(printf "\033[96m")  ->$(printf "\033[0m")" "${@}"
 }
 
 log "Installing base packages"
-setup-apkrepos -1 -c
+
+cat>/etc/apk/repositories<<EOF
+https://dl-cdn.alpinelinux.org/alpine/latest-stable/main
+https://dl-cdn.alpinelinux.org/alpine/latest-stable/community
+EOF
+
 apk update
 apk add linux-lts linux-firmware-none acpi dracut
 
