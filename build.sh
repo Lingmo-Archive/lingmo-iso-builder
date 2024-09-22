@@ -25,7 +25,7 @@ chmod +x "${workdir}/apk"
 
 log "Building rootfs"
 "${workdir}/apk" -X https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/ -U --allow-untrusted -p "${workdir}/rootfs" --initdb add alpine-base
-cp "$(dirname "$0")/chroot.sh" "${workdir}/chroot"
+cp "$(dirname "$0")/chroot.sh" "${workdir}/rootfs"
 
 log "Entering chroot"
 arch-chroot "${workdir}/rootfs" /chroot.sh
